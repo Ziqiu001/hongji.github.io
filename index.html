@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>弘极七班 - 登录</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",sans-serif}
+body{background:#f0f4f9;display:grid;place-items:center;height:100vh}
+.login-box{
+    background:white;width:420px;padding:40px;border-radius:16px;
+    box-shadow:0 5px 20px rgba(0,60,150,0.1)
+}
+.login-title{
+    font-size:26px;color:#2563eb;text-align:center;margin-bottom:6px
+}
+.login-desc{
+    text-align:center;color:#64748b;margin-bottom:30px;font-size:14px
+}
+.input-item{
+    margin-bottom:20px
+}
+.input-item label{
+    display:block;margin-bottom:6px;color:#333;font-size:14px
+}
+.input-item input{
+    width:100%;padding:12px 14px;border:1px solid #d1d5db;
+    border-radius:10px;font-size:15px
+}
+.input-item input:focus{
+    outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.15)
+}
+.login-btn{
+    width:100%;padding:13px;background:#3b82f6;color:white;
+    border:none;border-radius:10px;font-size:16px;margin-top:10px;cursor:pointer
+}
+.login-btn:hover{background:#2563eb}
+.tips{display:none}
+
+#main{display:none}
+.container{max-width:1450px;margin:0 auto;padding:20px}
+.header-box{
+    background:white;border-radius:16px;padding:24px;text-align:center;
+    box-shadow:0 4px 12px rgba(40,90,180,0.12);margin-bottom:20px;
+}
+.class-name{font-size:30px;color:#2563eb;letter-spacing:3px;margin-bottom:8px;font-weight:600}
+.page-desc{font-size:15px;color:#64748b}
+.operation-panel{
+    background:white;border-radius:14px;padding:25px;
+    box-shadow:0 3px 10px rgba(40,90,180,0.08);margin-bottom:20px;
+}
+.section-title{
+    font-size:17px;color:#1e40af;margin:15px 0 10px;
+    border-left:5px solid #3b82f6;padding-left:10px;font-weight:500;
+}
+.row-flex{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:16px}
+input,textarea{
+    border:1px solid #d1d5db;border-radius:9px;padding:11px 12px;
+    font-size:14px;transition:all 0.25s ease;background:#fefefe;
+}
+input:focus,textarea:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.15)}
+textarea{width:280px;height:75px;resize:none}
+.short-input{width:95px !important}
+.mid-input{width:150px !important}
+.btn{
+    padding:11px 20px;border:none;border-radius:9px;font-size:14px;
+    cursor:pointer;transition:all 0.2s;font-weight:500;
+}
+.btn-blue{background:#3b82f6;color:white}
+.btn-blue:hover{background:#2563eb;transform:translateY(-1px)}
+.btn-green{background:#10b981;color:white}
+.btn-green:hover{background:#059669}
+.btn-red{background:#ef4444;color:white}
+.btn-red:hover{background:#dc2626}
+.btn-orange{background:#f97316;color:white}
+.btn-orange:hover{background:#ea580c}
+.btn-gray{background:#6b7280;color:white}
+.btn-gray:hover{background:#4b5563}
+.btn-yellow{background:#eab308;color:white}
+.btn-yellow:hover{background:#ca8a04}
+.table-wrapper{
+    background:white;border-radius:14px;overflow:hidden;
+    box-shadow:0 3px 10px rgba(40,90,180,0.08);margin-bottom:20px;
+}
+table{width:100%;border-collapse:collapse;table-layout:fixed;}
+thead th{background:#2563eb;color:white;padding:15px;font-size:15px}
+tbody td{padding:13px;border:1px solid #e5e7eb;font-size:14px;text-align:center;word-wrap:break-word;}
+tbody tr:nth-child(even){background:#f8fafc}
+tbody tr:hover{background:#eff6ff}
+.total-score{font-weight:600;color:#dc2626;font-size:15px}
+.record-content{text-align:left;line-height:1.7;font-size:13px;color:#4b5563;white-space:pre-line;}
+.empty-hint{padding:45px;color:#9ca3af;font-size:16px;text-align:center}
+.bottom-btn-bar{margin-top:15px;display:flex;gap:12px;justify-content:center}
+.logout-btn{
+    background:#64748b;color:white;padding:8px 14px;
+    border:none;border-radius:8px;cursor:pointer;margin-bottom:10px
+}
+.rank-text{font-weight:bold;color:#ff9100}
+.tab-switch{display:flex;gap:10px;margin-bottom:15px}
+.tab-active{background:#2563eb !important}
+.tab-hide{display:none}
+/* 编辑弹窗样式 */
+.edit-mask{
+    position:fixed;top:0;left:0;width:100%;height:100%;
+    background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;z-index:999
+}
+.edit-box{
+    background:#fff;padding:30px;border-radius:12px;width:360px;box-shadow:0 4px 20px #0002
+}
+.edit-box h3{margin-bottom:20px;color:#1e40af;text-align:center}
+.edit-row{margin-bottom:16px}
+.edit-row label{display:block;margin-bottom:5px;color:#333}
+.btn-group{display:flex;gap:10px;margin-top:20px}
+
+@keyframes floatTip{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-8px)}
+}
+@keyframes flashLight{
+    0%{box-shadow:0 0 5px #ffd700}
+    50%{box-shadow:0 0 20px #ff9500,0 0 35px #ffd700}
+    100%{box-shadow:0 0 5px #ffd700}
+}
+@keyframes shakeFun{
+    0%,100%{transform:rotate(0deg)}
+    25%{transform:rotate(3deg)}
+    75%{transform:rotate(-3deg)}
+}
+.egg-tip{
+    position:fixed;right:30px;bottom:30px;
+    background:linear-gradient(135deg,#ffd700,#ff9500);color:#333;
+    padding:10px 16px;border-radius:20px;
+    box-shadow:0 2px 8px #ccc;
+    animation:floatTip 2s infinite ease-in-out;
+    cursor:pointer;font-weight:bold;
+}
+.flash-effect{animation:flashLight 0.8s ease-in-out}
+.shake-effect{animation:shakeFun 0.5s ease-in-out}
+</style>
+</head>
+
+<body>
+<div id="login">
+    <div class="login-box">
+        <div class="login-title">弘极七班积分系统</div>
+        <div class="login-desc">请使用班委账号登录</div>
+        <div class="input-item">
+            <label>账号</label>
+            <input id="user" placeholder="请输入账号">
+        </div>
+        <div class="input-item">
+            <label>密码</label>
+            <input id="pwd" type="password" placeholder="请输入密码">
+        </div>
+        <button class="login-btn" onclick="login()">登录系统</button>
+    </div>
+</div>
+
+<div id="main">
+    <div class="container">
+        <button class="logout-btn" onclick="logout()">退出登录</button>
+        <div class="header-box">
+            <h1 class="class-name">弘极七班</h1>
+            <p class="page-desc">班级积分兑换管理系统</p>
+        </div>
+
+        <div class="operation-panel">
+            <div class="section-title">一、添加班级学生</div>
+            <div class="row-flex">
+                <textarea id="batch" placeholder="批量录入格式&#10;每行填写：学号 姓名&#10;示例：01 李明"></textarea>
+                <button class="btn btn-blue" onclick="addBatch()">批量添加学生</button>
+                <input class="mid-input" id="stu" placeholder="单个录入：学号 姓名">
+                <button class="btn btn-blue" onclick="addSingle()">单个添加</button>
+            </div>
+            <div class="section-title">二、个人加减积分</div>
+            <div class="row-flex">
+                <input class="mid-input" id="keyInfo" placeholder="输入学号/姓名">
+                <input class="short-input" id="addScore" placeholder="加分">
+                <input id="addNote" placeholder="加分原因">
+                <button class="btn btn-green" onclick="doAdd()">确认加分</button>
+                <input class="short-input" id="minusScore" placeholder="扣分">
+                <input id="minusNote" placeholder="扣分原因">
+                <button class="btn btn-red" onclick="doMinus()">确认扣分</button>
+            </div>
+            <div class="section-title">三、全班统一加分</div>
+            <div class="row-flex">
+                <input id="taskName" placeholder="集体任务名称">
+                <input class="short-input" id="taskPoint" placeholder="单次加分">
+                <button class="btn btn-orange" onclick="doTask()">全班统一加分</button>
+            </div>
+            <div class="section-title">四、礼品兑换扣分</div>
+            <div class="row-flex">
+                <input class="mid-input" id="giftKey" placeholder="输入学号/姓名">
+                <input id="giftName" placeholder="兑换奖品名称">
+                <input class="short-input" id="giftPoint" placeholder="扣除积分">
+                <button class="btn btn-green" onclick="doGift()">确认兑换</button>
+            </div>
+        </div>
+
+        <div class="tab-switch">
+            <button class="btn btn-blue tab-active" id="tab1" onclick="switchTable(1)">积分总表</button>
+            <button class="btn btn-gray" id="tab2" onclick="switchTable(2)">积分排名榜</button>
+        </div>
+
+        <div class="table-wrapper">
+            <div id="tableAll">
+                <div class="section-title">📊 班级积分总表</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>学号</th><th>姓名</th><th>当前总积分</th>
+                            <th>加分明细</th><th>扣分明细</th><th>兑换记录</th><th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listBody"></tbody>
+                </table>
+            </div>
+            <div id="tableRank" class="tab-hide">
+                <div class="section-title">🏆 积分榜首排名</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>排名</th><th>学号</th><th>姓名</th><th>总积分</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rankBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bottom-btn-bar">
+            <button class="btn btn-gray" onclick="exportData()">导出数据文本</button>
+            <button class="btn btn-red" onclick="clearAllData()">一键清空全部数据</button>
+        </div>
+        <div class="egg-tip" onclick="showNewEgg()">🎁隐藏趣味彩蛋</div>
+    </div>
+</div>
+
+<!-- 编辑学生信息弹窗 -->
+<div class="edit-mask" id="editMask">
+    <div class="edit-box">
+        <h3>修改学生信息</h3>
+        <input type="hidden" id="editIndex">
+        <div class="edit-row">
+            <label>学号</label>
+            <input type="text" id="editNum">
+        </div>
+        <div class="edit-row">
+            <label>姓名</label>
+            <input type="text" id="editName">
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-blue" onclick="saveEdit()">保存修改</button>
+            <button class="btn btn-gray" onclick="closeEdit()">取消</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const ADMIN_USER = "弘极班委";
+const ADMIN_PWD = "123456";
+const CLEAR_PWD = "123456";
+let data = JSON.parse(localStorage.getItem('hongji7_data')) || [];
+let addCount = 0;
+let nowTab = 1;
+
+const novelEgg = ["七班潜力少年超多✨","积分见证每日成长😎","班风向上人人闪光🌟","团结共进未来可期"];
+const kingEgg = ["🏆积分王者，实力出众","稳居榜首优秀已成习惯"];
+const funTalk = ["加分到手快乐翻倍🥳","集体发力共同进步","付出皆有回报"];
+function getRandomText(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+function showNewEgg(){
+    alert(`🔍隐藏彩蛋\n${getRandomText(novelEgg)}`);
+    document.querySelector('.egg-tip').classList.add('shake-effect');
+    setTimeout(()=>document.querySelector('.egg-tip').classList.remove('shake-effect'),500);
+}
+
+function switchTable(num){
+    nowTab = num;
+    let t1 = document.getElementById('tableAll');
+    let t2 = document.getElementById('tableRank');
+    let b1 = document.getElementById('tab1');
+    let b2 = document.getElementById('tab2');
+    if(num===1){
+        t1.classList.remove('tab-hide');
+        t2.classList.add('tab-hide');
+        b1.classList.add('tab-active');
+        b2.classList.remove('tab-active');
+    }else{
+        t1.classList.add('tab-hide');
+        t2.classList.remove('tab-hide');
+        b2.classList.add('tab-active');
+        b1.classList.remove('tab-active');
+    }
+}
+
+function login(){
+    let u = document.getElementById('user').value.trim();
+    let p = document.getElementById('pwd').value.trim();
+    if(u === ADMIN_USER && p === ADMIN_PWD){
+        localStorage.setItem('isLogin','true');
+        showMain();
+    }else{
+        alert(Math.random()>0.5?"账号密码不对哦~":"密钥验证失败");
+    }
+}
+function logout(){
+    localStorage.removeItem('isLogin');
+    alert("👋本次管理结束");
+    location.reload();
+}
+function showMain(){
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('main').style.display = 'block';
+    renderAll();
+    alert("🚀成功登入积分管理系统");
+}
+window.onload = function(){
+    if(localStorage.getItem('isLogin')==='true'){
+        showMain();
+    }
+}
+
+function renderAll(){renderTable();renderRank();}
+function renderTable(){
+    let tb = document.getElementById('listBody');
+    let html = '';
+    if(data.length===0){
+        html='<tr><td colspan="7" class="empty-hint">暂无学生</td></tr>';
+    }else{
+        data.sort((a,b)=>a.num.localeCompare(b.num));
+        data.forEach((item,i)=>{
+            html+=`<tr>
+            <td>${item.num}</td>
+            <td>${item.name}</td>
+            <td class="total-score">${item.score}</td>
+            <td class="record-content">${item.add||'无'}</td>
+            <td class="record-content">${item.min||'无'}</td>
+            <td class="record-content">${item.gift||'无'}</td>
+            <td>
+                <button class="btn btn-yellow" onclick="openEdit(${i})">编辑</button>
+                <button class="btn btn-red" onclick="delStudent(${i})">删除</button>
+            </td></tr>`;
+        });
+    }
+    tb.innerHTML=html;
+}
+function renderRank(){
+    let tb = document.getElementById('rankBody');
+    let html='';
+    if(data.length===0){
+        html='<tr><td colspan="4" class="empty-hint">暂无数据</td></tr>';
+    }else{
+        let arr=[...data].sort((x,y)=>y.score-x.score);
+        arr.forEach((item,idx)=>{
+            html+=`<tr><td class="rank-text">第${idx+1}名</td><td>${item.num}</td><td>${item.name}</td><td class="total-score">${item.score}</td></tr>`;
+        });
+    }
+    tb.innerHTML=html;
+}
+
+// 打开编辑弹窗
+function openEdit(idx){
+    let stu = data[idx];
+    document.getElementById('editIndex').value = idx;
+    document.getElementById('editNum').value = stu.num;
+    document.getElementById('editName').value = stu.name;
+    document.getElementById('editMask').style.display = 'flex';
+}
+// 关闭编辑弹窗
+function closeEdit(){
+    document.getElementById('editMask').style.display = 'none';
+}
+// 保存修改信息
+function saveEdit(){
+    let idx = parseInt(document.getElementById('editIndex').value);
+    let newNum = document.getElementById('editNum').value.trim();
+    let newName = document.getElementById('editName').value.trim();
+    if(!newNum || !newName){
+        alert("学号和姓名不能为空");
+        return;
+    }
+    // 校验学号重复，排除自身
+    let repeat = data.some((item,i)=> item.num === newNum && i !== idx);
+    if(repeat){
+        alert("该学号已存在，无法修改");
+        return;
+    }
+    data[idx].num = newNum;
+    data[idx].name = newName;
+    closeEdit();
+    save();
+    alert("学生信息修改成功");
+}
+
+function findStudent(key){return data.find(s=>s.num===key||s.name===key);}
+function save(){localStorage.setItem('hongji7_data',JSON.stringify(data));renderAll();}
+
+function addBatch(){
+    let t=document.getElementById('batch').value.trim();
+    if(!t)return alert("请填写学生名单");
+    let lines=t.split('\n').map(i=>i.trim()).filter(i=>i);
+    let cnt=0;
+    lines.forEach(line=>{
+        let sp=line.split(/\s+/);
+        if(sp.length<2)return;
+        let num=sp[0],name=sp.slice(1).join(' ');
+        if(!data.some(x=>x.num===num)){
+            data.push({num,name,score:0,add:'',min:'',gift:''});
+            cnt++;
+        }
+    });
+    document.getElementById('batch').value='';
+    save();
+    alert(`🎉成功添加${cnt}名同学`);
+}
+function addSingle(){
+    let t=document.getElementById('stu').value.trim();
+    if(!t)return alert("格式：学号 姓名");
+    let sp=t.split(/\s+/);
+    if(sp.length<2)return alert("格式错误");
+    let num=sp[0],name=sp.slice(1).join(' ');
+    if(data.some(x=>x.num===num))return alert("学号已存在");
+    data.push({num,name,score:0,add:'',min:'',gift:''});
+    document.getElementById('stu').value='';
+    save();
+    alert(`✅${name}录入成功`);
+}
+
+function doAdd(){
+    let key=document.getElementById('keyInfo').value.trim();
+    let s=parseInt(document.getElementById('addScore').value);
+    let note=document.getElementById('addNote').value.trim();
+    if(!key||isNaN(s)||s<=0||!note)return alert("请补全信息");
+    let stu=findStudent(key);
+    if(!stu)return alert("未找到该学生");
+    
+    stu.score+=s;
+    addCount++;
+    if(addCount>=3){
+        document.body.classList.add('flash-effect');
+        setTimeout(()=>document.body.classList.remove('flash-effect'),800);
+        addCount=0;
+    }
+    let time=new Date().toLocaleString().slice(5);
+    stu.add+=(stu.add?'\n':'')+`[${time}]+${s}分 ${note}`;
+    
+    document.getElementById('keyInfo').value='';
+    document.getElementById('addScore').value='';
+    document.getElementById('addNote').value='';
+    save();
+    alert(getRandomText(funTalk));
+    
+    if(stu.score>=80){
+        setTimeout(()=>alert(getRandomText(kingEgg)),300);
+    }
+}
+function doMinus(){
+    let key=document.getElementById('keyInfo').value.trim();
+    let s=parseInt(document.getElementById('minusScore').value);
+    let note=document.getElementById('minusNote').value.trim();
+    if(!key||isNaN(s)||s<=0||!note)return alert("补全扣分信息");
+    let stu=findStudent(key);
+    if(!stu)return alert("未找到学生");
+    
+    stu.score=Math.max(0,stu.score-s);
+    let time=new Date().toLocaleString().slice(5);
+    stu.min+=(stu.min?'\n':'')+`[${time}]-${s}分 ${note}`;
+    
+    document.getElementById('keyInfo').value='';
+    document.getElementById('minusScore').value='';
+    document.getElementById('minusNote').value='';
+    save();
+    alert(getRandomText(funTalk));
+}
+function doTask(){
+    let task=document.getElementById('taskName').value.trim();
+    let s=parseInt(document.getElementById('taskPoint').value);
+    if(!task||isNaN(s)||s<=0)return alert("填写任务与分值");
+    let time=new Date().toLocaleString().slice(5);
+    
+    data.forEach(stu=>{
+        stu.score+=s;
+        stu.add+=(stu.add?'\n':'')+`[${time}]+${s}分 ${task}`;
+    });
+    
+    document.getElementById('taskName').value='';
+    document.getElementById('taskPoint').value='';
+    save();
+    alert("🤝全员加分完成");
+}
+function doGift(){
+    let key=document.getElementById('giftKey').value.trim();
+    let s=parseInt(document.getElementById('giftPoint').value);
+    let gift=document.getElementById('giftName').value.trim();
+    if(!key||isNaN(s)||s<=0||!gift)return alert("完善兑换信息");
+    let stu=findStudent(key);
+    if(!stu)return alert("未找到学生");
+    if(stu.score<s)return alert("积分不足");
+    
+    stu.score-=s;
+    let time=new Date().toLocaleString().slice(5);
+    stu.gift+=(stu.gift?'\n':'')+`[${time}]-${s}分 兑换${gift}`;
+    
+    document.getElementById('giftKey').value='';
+    document.getElementById('giftName').value='';
+    document.getElementById('giftPoint').value='';
+    save();
+    alert(getRandomText(funTalk));
+}
+function delStudent(i){
+    if(!confirm("确定删除该学生记录？"))return;
+    data.splice(i,1);
+    save();
+    alert("已删除记录");
+}
+function exportData(){
+    if(data.length===0)return alert("暂无数据导出");
+    let txt="弘极七班积分记录表\n学号\t姓名\t积分\t加分记录\t扣分记录\t兑换记录\n";
+    data.forEach(item=>{
+        let addStr = (item.add||'无').replace(/\n/g,' ');
+        let minStr = (item.min||'无').replace(/\n/g,' ');
+        let giftStr = (item.gift||'无').replace(/\n/g,' ');
+        txt+=`${item.num}\t${item.name}\t${item.score}\t${addStr}\t${minStr}\t${giftStr}\n`;
+    });
+    let blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+    let a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download="弘极七班积分记录.txt";
+    a.click();
+    alert("💾数据下载成功");
+}
+function clearAllData(){
+    let input=prompt("输入清空密码：");
+    if(input!==CLEAR_PWD)return alert("密码错误");
+    if(!confirm("确认清空所有数据？不可恢复！"))return;
+    data=[];
+    save();
+    alert("♻️数据已重置");
+}
+</script>
+</body>
+</html>
