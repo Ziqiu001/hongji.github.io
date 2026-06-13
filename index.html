@@ -331,6 +331,8 @@ function initCloudSync() {
         document.getElementById('syncStatus').className = 'sync-status sync-on';
         document.getElementById('syncStatus').textContent = '☁️ 云端同步已连接';
         document.getElementById('cloudBadge').textContent = '☁️ 云端同步已开启';
+        // 初始化成功后立即拉取云端数据
+        setTimeout(forceLoadFromCloud, 500);
     } catch(e) {
         showSyncOffline();
     }
@@ -348,31 +350,35 @@ function showSyncing() {
     div.className = 'syncing';
     div.textContent = '☁️ 正在同步...';
     document.body.appendChild(div);
-    setTimeout(() => div.remove(), 1500);
+    setTimeout(() => div.remove(), 2000);
 }
 
 async function saveToCloud() {
-    if(!cloudSyncEnabled || isSyncing) return;
+    if(!cloudSyncEnabled) return;
     isSyncing = true;
     showSyncing();
     try {
+        // 先删除所有旧数据
         const query = new AV.Query('Hongji7Data');
+        query.limit(100);
         const results = await query.find();
-        let cloudData;
-        if(results.length > 0) {
-            cloudData = results[0];
-        } else {
-            const Hongji7Data = AV.Object.extend('Hongji7Data');
-            cloudData = new Hongji7Data();
+        for(let i = 0; i < results.length; i++) {
+            await results[i].destroy();
         }
+        // 创建新数据
+        const Hongji7Data = AV.Object.extend('Hongji7Data');
+        const cloudData = new Hongji7Data();
         cloudData.set('students', JSON.stringify(data));
         cloudData.set('updateTime', new Date());
         await cloudData.save();
-    } catch(e) {}
+        console.log('云端保存成功, 学生数:', data.length);
+    } catch(e) {
+        console.log('保存云端失败:', e);
+    }
     isSyncing = false;
 }
 
-async function loadFromCloud(force) {
+async function forceLoadFromCloud() {
     if(!cloudSyncEnabled) return;
     try {
         const query = new AV.Query('Hongji7Data');
@@ -381,13 +387,15 @@ async function loadFromCloud(force) {
         const results = await query.find();
         if(results.length > 0) {
             const cloudStudents = results[0].get('students');
-            if(cloudStudents) {
+            if(cloudStudents && cloudStudents.length > 0) {
                 data = JSON.parse(cloudStudents);
                 localStorage.setItem('hongji7_data', JSON.stringify(data));
                 renderAll();
             }
         }
-    } catch(e) {}
+    } catch(e) {
+        console.log('拉取云端失败:', e);
+    }
 }
 
 function syncNow() {
@@ -396,7 +404,8 @@ function syncNow() {
         return;
     }
     saveToCloud();
-    alert('已同步到云端');
+    setTimeout(forceLoadFromCloud, 1000);
+    alert('已同步到云端，刷新页面其他设备即可看到');
 }
 
 const ADMIN_USER = "弘极班委";
@@ -494,10 +503,10 @@ function showMain(){
 
 window.onload = function(){
     initCloudSync();
-    // 页面加载后延迟1秒强制从云端拉取最新数据
+    // 页面加载后强制从云端拉取数据
     setTimeout(function(){
-        loadFromCloud(true);
-    }, 1000);
+        forceLoadFromCloud();
+    }, 1500);
     if(localStorage.getItem('isLogin')==='true'){
         showSystemSelect();
     }
