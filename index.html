@@ -283,7 +283,8 @@ tbody tr:nth-child(even){background:#f8f9fa}
             </div>
         </div>
         <div class="bottom-btn-bar">
-            <button class="btn btn-gray" onclick="syncNow()">☁️ 立即同步云端</button>
+            <button class="btn btn-green" onclick="pullFromCloud()">📥 从云端拉取数据</button>
+            <button class="btn btn-blue" onclick="pushToCloud()">📤 上传数据到云端</button>
             <button class="btn btn-gray" onclick="exportData()">导出数据文本</button>
             <button class="btn btn-red" onclick="clearAllData()">一键清空全部数据</button>
         </div>
@@ -331,8 +332,7 @@ function initCloudSync() {
         document.getElementById('syncStatus').className = 'sync-status sync-on';
         document.getElementById('syncStatus').textContent = '☁️ 云端同步已连接';
         document.getElementById('cloudBadge').textContent = '☁️ 云端同步已开启';
-        // 初始化成功后立即拉取云端数据
-        setTimeout(forceLoadFromCloud, 500);
+        setTimeout(forceLoadCloud, 800);
     } catch(e) {
         showSyncOffline();
     }
@@ -354,8 +354,76 @@ function showSyncing() {
 }
 
 async function saveToCloud() {
-    if(!cloudSyncEnabled) return;
+    if(!cloudSyncEnabled || isSyncing) return;
     isSyncing = true;
+    showSyncing();
+    try {
+        const query = new AV.Query('Hongji7Data');
+        const results = await query.find();
+        let cloudData;
+        if(results.length > 0) {
+            cloudData = results[0];
+        } else {
+            const Hongji7Data = AV.Object.extend('Hongji7Data');
+            cloudData = new Hongji7Data();
+        }
+        cloudData.set('students', JSON.stringify(data));
+        cloudData.set('updateTime', new Date());
+        await cloudData.save();
+    } catch(e) {}
+    isSyncing = false;
+}
+
+async function forceLoadCloud() {
+    if(!cloudSyncEnabled) return;
+    try {
+        const query = new AV.Query('Hongji7Data');
+        query.descending('updateTime');
+        query.limit(1);
+        const results = await query.find();
+        if(results.length > 0) {
+            const cloudStudents = results[0].get('students');
+            if(cloudStudents) {
+                data = JSON.parse(cloudStudents);
+                localStorage.setItem('hongji7_data', JSON.stringify(data));
+                renderAll();
+            }
+        }
+    } catch(e) {}
+}
+
+async function pullFromCloud() {
+    if(!cloudSyncEnabled) {
+        alert('云端同步未配置');
+        return;
+    }
+    showSyncing();
+    try {
+        const query = new AV.Query('Hongji7Data');
+        query.descending('updateTime');
+        query.limit(1);
+        const results = await query.find();
+        if(results.length > 0) {
+            const cloudStudents = results[0].get('students');
+            if(cloudStudents) {
+                data = JSON.parse(cloudStudents);
+                localStorage.setItem('hongji7_data', JSON.stringify(data));
+                renderAll();
+                alert('✅ 已从云端拉取最新数据！\n\n学生数：' + data.length + ' 人');
+            }
+        } else {
+            alert('⚠️ 云端暂无数据，请先上传数据');
+        }
+    } catch(e) {
+        alert('❌ 拉取失败：' + e.message);
+    }
+}
+
+async function pushToCloud() {
+    if(!cloudSyncEnabled) {
+        alert('云端同步未配置');
+        return;
+    }
     showSyncing();
     try {
         // 先删除所有旧数据
@@ -371,41 +439,10 @@ async function saveToCloud() {
         cloudData.set('students', JSON.stringify(data));
         cloudData.set('updateTime', new Date());
         await cloudData.save();
-        console.log('云端保存成功, 学生数:', data.length);
+        alert('✅ 已上传到云端！\n\n学生数：' + data.length + ' 人\n\n其他设备点击「从云端拉取数据」即可同步');
     } catch(e) {
-        console.log('保存云端失败:', e);
+        alert('❌ 上传失败：' + e.message);
     }
-    isSyncing = false;
-}
-
-async function forceLoadFromCloud() {
-    if(!cloudSyncEnabled) return;
-    try {
-        const query = new AV.Query('Hongji7Data');
-        query.descending('updateTime');
-        query.limit(1);
-        const results = await query.find();
-        if(results.length > 0) {
-            const cloudStudents = results[0].get('students');
-            if(cloudStudents && cloudStudents.length > 0) {
-                data = JSON.parse(cloudStudents);
-                localStorage.setItem('hongji7_data', JSON.stringify(data));
-                renderAll();
-            }
-        }
-    } catch(e) {
-        console.log('拉取云端失败:', e);
-    }
-}
-
-function syncNow() {
-    if(!cloudSyncEnabled) {
-        alert('云端同步未配置');
-        return;
-    }
-    saveToCloud();
-    setTimeout(forceLoadFromCloud, 1000);
-    alert('已同步到云端，刷新页面其他设备即可看到');
 }
 
 const ADMIN_USER = "弘极班委";
@@ -450,6 +487,7 @@ function login(){
     let p = document.getElementById('pwd').value.trim();
     if(u === ADMIN_USER && p === ADMIN_PWD){
         localStorage.setItem('isLogin','true');
+        forceLoadCloud();
         showSystemSelect();
     }else{
         alert("账号密码不对哦~");
@@ -458,7 +496,7 @@ function login(){
 
 function showSystemSelect(){
     document.getElementById('login').style.display = 'none';
-    document.getElementById('system-select').style.display = 'block';
+    document.getElementById('system-select').style.display = 'flex';
     document.getElementById('main').style.display = 'none';
 }
 
@@ -503,10 +541,6 @@ function showMain(){
 
 window.onload = function(){
     initCloudSync();
-    // 页面加载后强制从云端拉取数据
-    setTimeout(function(){
-        forceLoadFromCloud();
-    }, 1500);
     if(localStorage.getItem('isLogin')==='true'){
         showSystemSelect();
     }
