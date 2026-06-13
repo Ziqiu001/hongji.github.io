@@ -3,325 +3,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>弘极七班控制面板</title>
+<title>弘极七班管理系统</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei", "PingFang SC", sans-serif}
-body{
-    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height:100vh;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei", sans-serif}
+body{background:#f0f2f5}
 #login{
     display:grid;
     place-items:center;
     height:100vh;
 }
 .login-box{
-    background:rgba(255,255,255,0.95);
-    backdrop-filter: blur(10px);
-    width:420px;padding:45px;border-radius:20px;
-    box-shadow:0 20px 60px rgba(0,0,0,0.15);
-    border:1px solid rgba(255,255,255,0.3);
+    background:#fff;
+    width:400px;padding:40px;border-radius:12px;
+    box-shadow:0 2px 12px rgba(0,0,0,0.1);
 }
 .login-title{
-    font-size:28px;
-    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-    text-align:center;
-    margin-bottom:8px;
-    font-weight:700;
+    font-size:28px;color:#165DFF;text-align:center;
+    margin-bottom:10px;
 }
 .login-desc{
-    text-align:center;color:#64748b;margin-bottom:35px;font-size:14px
+    text-align:center;color:#666;margin-bottom:30px;font-size:14px
 }
 .sync-status{
-    text-align:center;padding:10px;border-radius:8px;margin-bottom:15px;font-size:13px;
+    text-align:center;padding:8px;border-radius:6px;margin-bottom:15px;font-size:13px;
 }
-.sync-on{background:rgba(16,185,129,0.1);color:#059669}
-.sync-off{background:rgba(107,114,128,0.1);color:#4b5563}
+.sync-on{background:#f0f9ff;color:#0e7490}
+.sync-off{background:#f3f4f6;color:#6b7280}
 .input-item{
-    margin-bottom:22px
+    margin-bottom:20px
 }
 .input-item label{
-    display:block;margin-bottom:8px;color:#475569;font-size:14px;font-weight:500
+    display:block;margin-bottom:8px;color:#333;font-size:14px
 }
 .input-item input{
-    width:100%;padding:14px 16px;border:2px solid #e2e8f0;
-    border-radius:12px;font-size:15px;transition:all 0.3s ease;
-    background:#f8fafc;
-}
-.input-item input:focus{
-    outline:none;border-color:#667eea;
-    box-shadow:0 0 0 4px rgba(102,126,234,0.15);
-    background:white;
+    width:100%;padding:12px;border:1px solid #ddd;
+    border-radius:6px;font-size:14px;
 }
 .login-btn{
-    width:100%;padding:14px;
-    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color:white;
-    border:none;border-radius:12px;font-size:16px;margin-top:10px;cursor:pointer;
-    font-weight:600;transition:all 0.3s ease;
-    box-shadow:0 4px 15px rgba(102,126,234,0.3);
-}
-.login-btn:hover{
-    transform:translateY(-2px);
-    box-shadow:0 8px 25px rgba(102,126,234,0.4);
+    width:100%;padding:12px;
+    background:#165DFF;color:#fff;
+    border:none;border-radius:6px;font-size:16px;margin-top:10px;cursor:pointer;
 }
 .tips{display:none}
 #system-select{
     display:none;
-    place-items:center;
+    justify-content:center;
+    align-items:center;
     height:100vh;
 }
 #main{display:none}
 .system-select-box{
-    background:rgba(255,255,255,0.95);
-    backdrop-filter: blur(10px);
-    width:580px;padding:50px;border-radius:20px;
-    box-shadow:0 20px 60px rgba(0,0,0,0.15);
+    background:#fff;
+    width:550px;padding:40px;border-radius:12px;
+    box-shadow:0 2px 12px rgba(0,0,0,0.1);
     text-align:center;
-    border:1px solid rgba(255,255,255,0.3);
 }
 .system-title{
-    font-size:26px;
-    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-    margin-bottom:40px;
-    font-weight:700;
+    font-size:24px;color:#165DFF;margin-bottom:30px;
 }
 .system-card{
-    display:inline-block;width:220px;padding:35px 25px;margin:10px;
-    border-radius:16px;cursor:pointer;transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border:2px solid #e2e8f0;
-    background:white;
+    display:inline-block;width:200px;padding:30px;margin:10px;
+    border-radius:8px;cursor:pointer;
+    border:1px solid #ddd;
+    background:#fff;
+    vertical-align:top;
 }
 .system-card:hover{
-    border-color:#667eea;
-    transform:translateY(-8px) scale(1.02);
-    box-shadow:0 15px 35px rgba(102,126,234,0.25);
-    background:linear-gradient(135deg, rgba(102,126,234,0.05) 0%, rgba(118,75,162,0.05) 100%);
+    border-color:#165DFF;background:#f8f9ff;
 }
 .system-card h3{
-    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-    margin-bottom:12px;
-    font-size:20px;
+    color:#165DFF;margin-bottom:10px;font-size:18px;
 }
-.system-card p{color:#64748b;font-size:14px;line-height:1.6}
-.container{max-width:1450px;margin:0 auto;padding:25px}
+.system-card p{color:#666;font-size:14px}
+.container{max-width:1400px;margin:0 auto;padding:20px}
 .header-box{
-    background:rgba(255,255,255,0.95);
-    backdrop-filter: blur(10px);
-    border-radius:18px;padding:30px;text-align:center;
-    box-shadow:0 10px 30px rgba(0,0,0,0.1);
-    margin-bottom:25px;
-    border:1px solid rgba(255,255,255,0.3);
+    background:#fff;border-radius:8px;padding:20px;text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom:20px;
 }
 .class-name{
-    font-size:34px;
-    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-    letter-spacing:4px;
-    margin-bottom:10px;
-    font-weight:700;
+    font-size:32px;color:#165DFF;letter-spacing:3px;
+    margin-bottom:8px;
 }
-.page-desc{font-size:16px;color:#64748b;font-weight:500}
+.page-desc{font-size:16px;color:#666}
 .cloud-badge{
-    display:inline-block;padding:5px 12px;border-radius:20px;font-size:12px;margin-top:8px;
-    background:rgba(16,185,129,0.1);color:#059669;font-weight:600;
+    display:inline-block;padding:4px 10px;border-radius:12px;font-size:12px;margin-top:5px;
+    background:#f0f9ff;color:#0e7490;
 }
 .operation-panel{
-    background:rgba(255,255,255,0.95);
-    backdrop-filter: blur(10px);
-    border-radius:16px;padding:30px;
-    box-shadow:0 8px 25px rgba(0,0,0,0.08);
-    margin-bottom:25px;
-    border:1px solid rgba(255,255,255,0.3);
+    background:#fff;border-radius:8px;padding:25px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom:20px;
 }
 .section-title{
-    font-size:18px;
-    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-    margin:20px 0 15px;
-    border-left:5px solid #667eea;
-    padding-left:12px;
-    font-weight:600;
+    font-size:18px;color:#165DFF;
+    margin:15px 0 12px;
+    border-left:4px solid #165DFF;
+    padding-left:10px;
 }
-.row-flex{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:18px}
+.row-flex{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:15px}
 input,textarea{
-    border:2px solid #e2e8f0;border-radius:12px;padding:12px 14px;
-    font-size:14px;transition:all 0.3s ease;background:#f8fafc;
+    border:1px solid #ddd;border-radius:6px;padding:10px 12px;
+    font-size:14px;
 }
-input:focus,textarea:focus{
-    outline:none;border-color:#667eea;
-    box-shadow:0 0 0 4px rgba(102,126,234,0.15);
-    background:white;
-}
-textarea{width:280px;height:80px;resize:none}
-.short-input{width:100px !important}
-.mid-input{width:160px !important}
-.operator-input{width:130px !important}
+textarea{width:260px;height:75px;resize:none}
+.short-input{width:90px}
+.mid-input{width:150px}
+.operator-input{width:120px}
 .btn{
-    padding:12px 22px;border:none;border-radius:12px;font-size:14px;
-    cursor:pointer;transition:all 0.3s ease;font-weight:600;
-    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    padding:10px 18px;border:none;border-radius:6px;font-size:14px;
+    cursor:pointer;
 }
-.btn:hover{
-    transform:translateY(-2px);
-    box-shadow:0 8px 20px rgba(0,0,0,0.15);
-}
-.btn-blue{
-    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color:white
-}
-.btn-green{
-    background:linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color:white
-}
-.btn-red{
-    background:linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    color:white
-}
-.btn-orange{
-    background:linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-    color:white
-}
-.btn-gray{
-    background:linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
-    color:white
-}
-.btn-yellow{
-    background:linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
-    color:white
-}
+.btn-blue{background:#165DFF;color:#fff}
+.btn-green{background:#00b42a;color:#fff}
+.btn-red{background:#f53f3f;color:#fff}
+.btn-orange{background:#ff7d00;color:#fff}
+.btn-gray{background:#86909c;color:#fff}
+.btn-yellow{background:#ff7d00;color:#fff}
 .table-wrapper{
-    background:rgba(255,255,255,0.95);
-    backdrop-filter: blur(10px);
-    border-radius:16px;overflow:hidden;
-    box-shadow:0 8px 25px rgba(0,0,0,0.08);
-    margin-bottom:25px;
-    border:1px solid rgba(255,255,255,0.3);
+    background:#fff;border-radius:8px;overflow:hidden;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom:20px;
 }
 table{width:100%;border-collapse:collapse;table-layout:fixed;}
 thead th{
-    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color:white;padding:16px;font-size:15px;font-weight:600;
+    background:#165DFF;color:#fff;padding:12px;font-size:14px;
 }
-tbody td{padding:14px;border:1px solid #f1f5f9;font-size:14px;text-align:center;word-wrap:break-word;}
-tbody tr:nth-child(even){background:#f8fafc}
-tbody tr:hover{
-    background:linear-gradient(135deg, rgba(102,126,234,0.08) 0%, rgba(118,75,162,0.08) 100%);
-}
-.total-score{font-weight:700;color:#dc2626;font-size:15px}
-.record-content{text-align:left;line-height:1.8;font-size:13px;color:#4b5563;white-space:pre-line;}
-.empty-hint{padding:50px;color:#9ca3af;font-size:16px;text-align:center}
-.bottom-btn-bar{margin-top:20px;display:flex;gap:15px;justify-content:center}
+tbody td{padding:12px;border:1px solid #eee;font-size:14px;text-align:center;word-wrap:break-word;}
+tbody tr:nth-child(even){background:#f8f9fa}
+.total-score{font-weight:bold;color:#f53f3f}
+.record-content{text-align:left;line-height:1.6;font-size:13px;color:#333;white-space:pre-line;}
+.empty-hint{padding:40px;color:#999;font-size:15px;text-align:center}
+.bottom-btn-bar{margin-top:15px;display:flex;gap:12px;justify-content:center}
 .logout-btn{
-    background:linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
-    color:white;padding:10px 18px;
-    border:none;border-radius:10px;cursor:pointer;margin-bottom:15px;
-    font-weight:500;transition:all 0.3s ease;
-    box-shadow:0 4px 12px rgba(0,0,0,0.1);
-}
-.logout-btn:hover{
-    transform:translateY(-2px);
-    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+    background:#86909c;color:#fff;padding:8px 15px;
+    border:none;border-radius:6px;cursor:pointer;margin-bottom:12px;
 }
 .back-btn{
-    background:linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
-    color:white;padding:10px 18px;
-    border:none;border-radius:10px;cursor:pointer;margin-bottom:15px;margin-right:12px;
-    font-weight:500;transition:all 0.3s ease;
-    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    background:#86909c;color:#fff;padding:8px 15px;
+    border:none;border-radius:6px;cursor:pointer;margin-bottom:12px;margin-right:10px;
 }
-.back-btn:hover{
-    transform:translateY(-2px);
-    box-shadow:0 8px 20px rgba(0,0,0,0.15);
-}
-.rank-text{font-weight:700;color:#f97316}
-.tab-switch{display:flex;gap:12px;margin-bottom:18px}
-.tab-active{
-    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-}
+.rank-text{font-weight:bold;color:#ff7d00}
+.tab-switch{display:flex;gap:10px;margin-bottom:15px}
+.tab-active{background:#165DFF !important}
 .tab-hide{display:none}
-/* 编辑弹窗样式 */
 .edit-mask{
     position:fixed;top:0;left:0;width:100%;height:100%;
     background:rgba(0,0,0,0.5);
-    backdrop-filter: blur(5px);
     display:none;align-items:center;justify-content:center;z-index:999
 }
 .edit-box{
-    background:rgba(255,255,255,0.98);
-    backdrop-filter: blur(10px);
-    padding:35px;border-radius:16px;width:380px;
-    box-shadow:0 20px 60px rgba(0,0,0,0.2);
-    border:1px solid rgba(255,255,255,0.3);
+    background:#fff;padding:30px;border-radius:8px;width:350px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.15);
 }
 .edit-box h3{
-    margin-bottom:25px;
-    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-    text-align:center;
-    font-size:20px;
-    font-weight:700;
+    margin-bottom:20px;color:#165DFF;text-align:center;
+    font-size:18px;
 }
-.edit-row{margin-bottom:18px}
-.edit-row label{display:block;margin-bottom:8px;color:#475569;font-weight:500}
-.btn-group{display:flex;gap:12px;margin-top:25px}
-@keyframes floatTip{
-    0%,100%{transform:translateY(0)}
-    50%{transform:translateY(-10px)}
-}
-@keyframes flashLight{
-    0%{box-shadow:0 0 10px #ffd700}
-    50%{box-shadow:0 0 30px #ff9500,0 0 50px #ffd700}
-    100%{box-shadow:0 0 10px #ffd700}
-}
-@keyframes shakeFun{
-    0%,100%{transform:rotate(0deg)}
-    25%{transform:rotate(4deg)}
-    75%{transform:rotate(-4deg)}
-}
-@keyframes fadeIn{
-    from{opacity:0;transform:translateY(20px)}
-    to{opacity:1;transform:translateY(0)}
-}
-#main, #system-select, .login-box, .system-select-box{
-    animation:fadeIn 0.5s ease-out;
-}
+.edit-row{margin-bottom:15px}
+.edit-row label{display:block;margin-bottom:6px;color:#333}
+.btn-group{display:flex;gap:10px;margin-top:20px}
 .egg-tip{
-    position:fixed;right:30px;bottom:30px;
-    background:linear-gradient(135deg,#ffd700,#ff9500);color:#333;
-    padding:12px 20px;border-radius:25px;
-    box-shadow:0 6px 20px rgba(255,149,0,0.3);
-    animation:floatTip 2.5s infinite ease-in-out;
-    cursor:pointer;font-weight:600;
-    transition:all 0.3s ease;
+    position:fixed;right:20px;bottom:20px;
+    background:#ff7d00;color:#fff;
+    padding:10px 16px;border-radius:20px;
+    cursor:pointer;font-weight:bold;
 }
-.egg-tip:hover{
-    transform:scale(1.05);
-    box-shadow:0 10px 30px rgba(255,149,0,0.4);
-}
-.flash-effect{animation:flashLight 0.8s ease-in-out}
-.shake-effect{animation:shakeFun 0.5s ease-in-out}
 .syncing{
-    position:fixed;top:20px;right:20px;
-    background:rgba(16,185,129,0.95);color:white;
-    padding:10px 20px;border-radius:10px;
-    font-weight:600;z-index:9999;
-    animation:fadeIn 0.3s ease;
+    position:fixed;top:15px;right:15px;
+    background:#00b42a;color:#fff;
+    padding:8px 15px;border-radius:6px;
+    font-weight:bold;z-index:9999;
 }
 </style>
 </head>
@@ -438,7 +290,6 @@ tbody tr:hover{
         <div class="egg-tip" onclick="showNewEgg()">🎁隐藏趣味彩蛋</div>
     </div>
 </div>
-<!-- 编辑学生信息弹窗 -->
 <div class="edit-mask" id="editMask">
     <div class="edit-box">
         <h3>修改学生信息</h3>
@@ -458,43 +309,29 @@ tbody tr:hover{
     </div>
 </div>
 
-<!-- LeanCloud云端同步SDK -->
 <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.12.0/dist/av-min.js"></script>
 <script>
-// ==============================================
-// ☁️ 云端同步配置 - 请填写你的LeanCloud信息
-// ==============================================
-// 1. 打开 https://www.leancloud.cn/ 注册免费账号
-// 2. 创建应用 → 开发版（免费）
-// 3. 进入应用 → 设置 → 应用凭证 → 复制AppID和AppKey
 const LC_CONFIG = {
     appId: "Uf6Wh0Xr6fmdQOa8DmOnS91O-gzGzoHsz",
     appKey: "vS4XQ8uV7j9zA2bK5cN8eP7w",
     serverURL: "https://uf6wh0xr.lc-cn-n1-shared.com"
 };
 
-// 初始化云端同步
 let cloudSyncEnabled = false;
 let isSyncing = false;
 
 function initCloudSync() {
-    if(LC_CONFIG.appId !== "你的AppID" && LC_CONFIG.appKey !== "你的AppKey") {
-        try {
-            AV.init({
-                appId: LC_CONFIG.appId,
-                appKey: LC_CONFIG.appKey,
-                serverURL: LC_CONFIG.serverURL
-            });
-            cloudSyncEnabled = true;
-            document.getElementById('syncStatus').className = 'sync-status sync-on';
-            document.getElementById('syncStatus').textContent = '☁️ 云端同步已连接';
-            document.getElementById('cloudBadge').textContent = '☁️ 云端同步已开启';
-            console.log('☁️ 云端同步初始化成功');
-        } catch(e) {
-            console.log('☁️ 云端同步初始化失败:', e);
-            showSyncOffline();
-        }
-    } else {
+    try {
+        AV.init({
+            appId: LC_CONFIG.appId,
+            appKey: LC_CONFIG.appKey,
+            serverURL: LC_CONFIG.serverURL
+        });
+        cloudSyncEnabled = true;
+        document.getElementById('syncStatus').className = 'sync-status sync-on';
+        document.getElementById('syncStatus').textContent = '☁️ 云端同步已连接';
+        document.getElementById('cloudBadge').textContent = '☁️ 云端同步已开启';
+    } catch(e) {
         showSyncOffline();
     }
 }
@@ -502,20 +339,18 @@ function initCloudSync() {
 function showSyncOffline() {
     cloudSyncEnabled = false;
     document.getElementById('syncStatus').className = 'sync-status sync-off';
-    document.getElementById('syncStatus').textContent = '💾 本地模式（未配置云端）';
-    document.getElementById('cloudBadge').textContent = '💾 本地存储模式';
+    document.getElementById('syncStatus').textContent = '💾 本地模式';
+    document.getElementById('cloudBadge').textContent = '💾 本地存储';
 }
 
-// 显示同步中提示
 function showSyncing() {
     const div = document.createElement('div');
     div.className = 'syncing';
-    div.textContent = '☁️ 正在同步云端...';
+    div.textContent = '☁️ 正在同步...';
     document.body.appendChild(div);
-    setTimeout(() => div.remove(), 2000);
+    setTimeout(() => div.remove(), 1500);
 }
 
-// 保存到云端
 async function saveToCloud() {
     if(!cloudSyncEnabled || isSyncing) return;
     isSyncing = true;
@@ -533,15 +368,11 @@ async function saveToCloud() {
         cloudData.set('students', JSON.stringify(data));
         cloudData.set('updateTime', new Date());
         await cloudData.save();
-        console.log('☁️ 云端同步成功');
-    } catch(e) {
-        console.log('☁️ 云端同步失败:', e);
-    }
+    } catch(e) {}
     isSyncing = false;
 }
 
-// 从云端加载
-async function loadFromCloud() {
+async function loadFromCloud(force) {
     if(!cloudSyncEnabled) return;
     try {
         const query = new AV.Query('Hongji7Data');
@@ -549,33 +380,25 @@ async function loadFromCloud() {
         query.limit(1);
         const results = await query.find();
         if(results.length > 0) {
-            const cloudData = results[0];
-            const cloudStudents = cloudData.get('students');
+            const cloudStudents = results[0].get('students');
             if(cloudStudents) {
                 data = JSON.parse(cloudStudents);
                 localStorage.setItem('hongji7_data', JSON.stringify(data));
                 renderAll();
-                console.log('☁️ 云端数据加载成功');
             }
         }
-    } catch(e) {
-        console.log('☁️ 云端加载失败，使用本地数据:', e);
-    }
+    } catch(e) {}
 }
 
-// 手动同步
 function syncNow() {
     if(!cloudSyncEnabled) {
-        alert('💡 请先在代码中配置LeanCloud的AppID和AppKey\n\n注册地址：https://www.leancloud.cn/');
+        alert('云端同步未配置');
         return;
     }
     saveToCloud();
-    alert('☁️ 已同步到云端！');
+    alert('已同步到云端');
 }
 
-// ==============================================
-// 系统核心功能
-// ==============================================
 const ADMIN_USER = "弘极班委";
 const ADMIN_PWD = "123456";
 const CLEAR_PWD = "123456";
@@ -592,8 +415,6 @@ function getRandomText(arr){return arr[Math.floor(Math.random()*arr.length)];}
 
 function showNewEgg(){
     alert(`🔍隐藏彩蛋\n${getRandomText(novelEgg)}`);
-    document.querySelector('.egg-tip').classList.add('shake-effect');
-    setTimeout(()=>document.querySelector('.egg-tip').classList.remove('shake-effect'),500);
 }
 
 function switchTable(num){
@@ -622,7 +443,7 @@ function login(){
         localStorage.setItem('isLogin','true');
         showSystemSelect();
     }else{
-        alert(Math.random()>0.5?"账号密码不对哦~":"密钥验证失败");
+        alert("账号密码不对哦~");
     }
 }
 
@@ -673,7 +494,10 @@ function showMain(){
 
 window.onload = function(){
     initCloudSync();
-    loadFromCloud();
+    // 页面加载后延迟1秒强制从云端拉取最新数据
+    setTimeout(function(){
+        loadFromCloud(true);
+    }, 1000);
     if(localStorage.getItem('isLogin')==='true'){
         showSystemSelect();
     }
@@ -770,7 +594,7 @@ function findStudent(key){return data.find(s=>s.num===key||s.name===key);}
 function save(){
     localStorage.setItem('hongji7_data', JSON.stringify(data));
     renderAll();
-    saveToCloud(); // 自动同步到云端
+    saveToCloud();
 }
 
 function addBatch(){
@@ -816,12 +640,6 @@ function doAdd(){
     if(!stu)return alert("未找到该学生");
     
     stu.score+=s;
-    addCount++;
-    if(addCount>=3){
-        document.body.classList.add('flash-effect');
-        setTimeout(()=>document.body.classList.remove('flash-effect'),800);
-        addCount=0;
-    }
     let time=new Date().toLocaleString().slice(5);
     let operatorStr = operator ? ` 操作人:${operator}` : '';
     stu.add+=(stu.add?'\n':'')+`[${time}]+${s}分 ${note}${operatorStr}`;
@@ -832,10 +650,6 @@ function doAdd(){
     document.getElementById('addOperator').value='';
     save();
     alert(getRandomText(funTalk));
-    
-    if(stu.score>=80){
-        setTimeout(()=>alert(getRandomText(kingEgg)),300);
-    }
 }
 
 function doMinus(){
