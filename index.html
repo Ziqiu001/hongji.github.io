@@ -3,147 +3,334 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>弘极七班 - 登录</title>
+<title>弘极七班 - 云端同步版</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",sans-serif}
-body{background:#f0f4f9;display:grid;place-items:center;height:100vh}
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei", "PingFang SC", sans-serif}
+body{
+    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height:100vh;
+}
+#login{
+    display:grid;
+    place-items:center;
+    height:100vh;
+}
 .login-box{
-    background:white;width:420px;padding:40px;border-radius:16px;
-    box-shadow:0 5px 20px rgba(0,60,150,0.1)
+    background:rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    width:420px;padding:45px;border-radius:20px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.15);
+    border:1px solid rgba(255,255,255,0.3);
 }
 .login-title{
-    font-size:26px;color:#2563eb;text-align:center;margin-bottom:6px
+    font-size:28px;
+    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    text-align:center;
+    margin-bottom:8px;
+    font-weight:700;
 }
 .login-desc{
-    text-align:center;color:#64748b;margin-bottom:30px;font-size:14px
+    text-align:center;color:#64748b;margin-bottom:35px;font-size:14px
 }
+.sync-status{
+    text-align:center;padding:10px;border-radius:8px;margin-bottom:15px;font-size:13px;
+}
+.sync-on{background:rgba(16,185,129,0.1);color:#059669}
+.sync-off{background:rgba(107,114,128,0.1);color:#4b5563}
 .input-item{
-    margin-bottom:20px
+    margin-bottom:22px
 }
 .input-item label{
-    display:block;margin-bottom:6px;color:#333;font-size:14px
+    display:block;margin-bottom:8px;color:#475569;font-size:14px;font-weight:500
 }
 .input-item input{
-    width:100%;padding:12px 14px;border:1px solid #d1d5db;
-    border-radius:10px;font-size:15px
+    width:100%;padding:14px 16px;border:2px solid #e2e8f0;
+    border-radius:12px;font-size:15px;transition:all 0.3s ease;
+    background:#f8fafc;
 }
 .input-item input:focus{
-    outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.15)
+    outline:none;border-color:#667eea;
+    box-shadow:0 0 0 4px rgba(102,126,234,0.15);
+    background:white;
 }
 .login-btn{
-    width:100%;padding:13px;background:#3b82f6;color:white;
-    border:none;border-radius:10px;font-size:16px;margin-top:10px;cursor:pointer
+    width:100%;padding:14px;
+    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color:white;
+    border:none;border-radius:12px;font-size:16px;margin-top:10px;cursor:pointer;
+    font-weight:600;transition:all 0.3s ease;
+    box-shadow:0 4px 15px rgba(102,126,234,0.3);
 }
-.login-btn:hover{background:#2563eb}
+.login-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 25px rgba(102,126,234,0.4);
+}
 .tips{display:none}
-
-#main{display:none}
-.container{max-width:1450px;margin:0 auto;padding:20px}
-.header-box{
-    background:white;border-radius:16px;padding:24px;text-align:center;
-    box-shadow:0 4px 12px rgba(40,90,180,0.12);margin-bottom:20px;
+#system-select{
+    display:none;
+    place-items:center;
+    height:100vh;
 }
-.class-name{font-size:30px;color:#2563eb;letter-spacing:3px;margin-bottom:8px;font-weight:600}
-.page-desc{font-size:15px;color:#64748b}
+#main{display:none}
+.system-select-box{
+    background:rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    width:580px;padding:50px;border-radius:20px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.15);
+    text-align:center;
+    border:1px solid rgba(255,255,255,0.3);
+}
+.system-title{
+    font-size:26px;
+    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    margin-bottom:40px;
+    font-weight:700;
+}
+.system-card{
+    display:inline-block;width:220px;padding:35px 25px;margin:10px;
+    border-radius:16px;cursor:pointer;transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border:2px solid #e2e8f0;
+    background:white;
+}
+.system-card:hover{
+    border-color:#667eea;
+    transform:translateY(-8px) scale(1.02);
+    box-shadow:0 15px 35px rgba(102,126,234,0.25);
+    background:linear-gradient(135deg, rgba(102,126,234,0.05) 0%, rgba(118,75,162,0.05) 100%);
+}
+.system-card h3{
+    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    margin-bottom:12px;
+    font-size:20px;
+}
+.system-card p{color:#64748b;font-size:14px;line-height:1.6}
+.container{max-width:1450px;margin:0 auto;padding:25px}
+.header-box{
+    background:rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border-radius:18px;padding:30px;text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom:25px;
+    border:1px solid rgba(255,255,255,0.3);
+}
+.class-name{
+    font-size:34px;
+    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    letter-spacing:4px;
+    margin-bottom:10px;
+    font-weight:700;
+}
+.page-desc{font-size:16px;color:#64748b;font-weight:500}
+.cloud-badge{
+    display:inline-block;padding:5px 12px;border-radius:20px;font-size:12px;margin-top:8px;
+    background:rgba(16,185,129,0.1);color:#059669;font-weight:600;
+}
 .operation-panel{
-    background:white;border-radius:14px;padding:25px;
-    box-shadow:0 3px 10px rgba(40,90,180,0.08);margin-bottom:20px;
+    background:rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border-radius:16px;padding:30px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.08);
+    margin-bottom:25px;
+    border:1px solid rgba(255,255,255,0.3);
 }
 .section-title{
-    font-size:17px;color:#1e40af;margin:15px 0 10px;
-    border-left:5px solid #3b82f6;padding-left:10px;font-weight:500;
+    font-size:18px;
+    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    margin:20px 0 15px;
+    border-left:5px solid #667eea;
+    padding-left:12px;
+    font-weight:600;
 }
-.row-flex{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:16px}
+.row-flex{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:18px}
 input,textarea{
-    border:1px solid #d1d5db;border-radius:9px;padding:11px 12px;
-    font-size:14px;transition:all 0.25s ease;background:#fefefe;
+    border:2px solid #e2e8f0;border-radius:12px;padding:12px 14px;
+    font-size:14px;transition:all 0.3s ease;background:#f8fafc;
 }
-input:focus,textarea:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.15)}
-textarea{width:280px;height:75px;resize:none}
-.short-input{width:95px !important}
-.mid-input{width:150px !important}
+input:focus,textarea:focus{
+    outline:none;border-color:#667eea;
+    box-shadow:0 0 0 4px rgba(102,126,234,0.15);
+    background:white;
+}
+textarea{width:280px;height:80px;resize:none}
+.short-input{width:100px !important}
+.mid-input{width:160px !important}
+.operator-input{width:130px !important}
 .btn{
-    padding:11px 20px;border:none;border-radius:9px;font-size:14px;
-    cursor:pointer;transition:all 0.2s;font-weight:500;
+    padding:12px 22px;border:none;border-radius:12px;font-size:14px;
+    cursor:pointer;transition:all 0.3s ease;font-weight:600;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
 }
-.btn-blue{background:#3b82f6;color:white}
-.btn-blue:hover{background:#2563eb;transform:translateY(-1px)}
-.btn-green{background:#10b981;color:white}
-.btn-green:hover{background:#059669}
-.btn-red{background:#ef4444;color:white}
-.btn-red:hover{background:#dc2626}
-.btn-orange{background:#f97316;color:white}
-.btn-orange:hover{background:#ea580c}
-.btn-gray{background:#6b7280;color:white}
-.btn-gray:hover{background:#4b5563}
-.btn-yellow{background:#eab308;color:white}
-.btn-yellow:hover{background:#ca8a04}
+.btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+.btn-blue{
+    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color:white
+}
+.btn-green{
+    background:linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color:white
+}
+.btn-red{
+    background:linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color:white
+}
+.btn-orange{
+    background:linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    color:white
+}
+.btn-gray{
+    background:linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color:white
+}
+.btn-yellow{
+    background:linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+    color:white
+}
 .table-wrapper{
-    background:white;border-radius:14px;overflow:hidden;
-    box-shadow:0 3px 10px rgba(40,90,180,0.08);margin-bottom:20px;
+    background:rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border-radius:16px;overflow:hidden;
+    box-shadow:0 8px 25px rgba(0,0,0,0.08);
+    margin-bottom:25px;
+    border:1px solid rgba(255,255,255,0.3);
 }
 table{width:100%;border-collapse:collapse;table-layout:fixed;}
-thead th{background:#2563eb;color:white;padding:15px;font-size:15px}
-tbody td{padding:13px;border:1px solid #e5e7eb;font-size:14px;text-align:center;word-wrap:break-word;}
-tbody tr:nth-child(even){background:#f8fafc}
-tbody tr:hover{background:#eff6ff}
-.total-score{font-weight:600;color:#dc2626;font-size:15px}
-.record-content{text-align:left;line-height:1.7;font-size:13px;color:#4b5563;white-space:pre-line;}
-.empty-hint{padding:45px;color:#9ca3af;font-size:16px;text-align:center}
-.bottom-btn-bar{margin-top:15px;display:flex;gap:12px;justify-content:center}
-.logout-btn{
-    background:#64748b;color:white;padding:8px 14px;
-    border:none;border-radius:8px;cursor:pointer;margin-bottom:10px
+thead th{
+    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color:white;padding:16px;font-size:15px;font-weight:600;
 }
-.rank-text{font-weight:bold;color:#ff9100}
-.tab-switch{display:flex;gap:10px;margin-bottom:15px}
-.tab-active{background:#2563eb !important}
+tbody td{padding:14px;border:1px solid #f1f5f9;font-size:14px;text-align:center;word-wrap:break-word;}
+tbody tr:nth-child(even){background:#f8fafc}
+tbody tr:hover{
+    background:linear-gradient(135deg, rgba(102,126,234,0.08) 0%, rgba(118,75,162,0.08) 100%);
+}
+.total-score{font-weight:700;color:#dc2626;font-size:15px}
+.record-content{text-align:left;line-height:1.8;font-size:13px;color:#4b5563;white-space:pre-line;}
+.empty-hint{padding:50px;color:#9ca3af;font-size:16px;text-align:center}
+.bottom-btn-bar{margin-top:20px;display:flex;gap:15px;justify-content:center}
+.logout-btn{
+    background:linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color:white;padding:10px 18px;
+    border:none;border-radius:10px;cursor:pointer;margin-bottom:15px;
+    font-weight:500;transition:all 0.3s ease;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+.logout-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+.back-btn{
+    background:linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color:white;padding:10px 18px;
+    border:none;border-radius:10px;cursor:pointer;margin-bottom:15px;margin-right:12px;
+    font-weight:500;transition:all 0.3s ease;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+.back-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+.rank-text{font-weight:700;color:#f97316}
+.tab-switch{display:flex;gap:12px;margin-bottom:18px}
+.tab-active{
+    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
 .tab-hide{display:none}
 /* 编辑弹窗样式 */
 .edit-mask{
     position:fixed;top:0;left:0;width:100%;height:100%;
-    background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;z-index:999
+    background:rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+    display:none;align-items:center;justify-content:center;z-index:999
 }
 .edit-box{
-    background:#fff;padding:30px;border-radius:12px;width:360px;box-shadow:0 4px 20px #0002
+    background:rgba(255,255,255,0.98);
+    backdrop-filter: blur(10px);
+    padding:35px;border-radius:16px;width:380px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.2);
+    border:1px solid rgba(255,255,255,0.3);
 }
-.edit-box h3{margin-bottom:20px;color:#1e40af;text-align:center}
-.edit-row{margin-bottom:16px}
-.edit-row label{display:block;margin-bottom:5px;color:#333}
-.btn-group{display:flex;gap:10px;margin-top:20px}
-
+.edit-box h3{
+    margin-bottom:25px;
+    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    text-align:center;
+    font-size:20px;
+    font-weight:700;
+}
+.edit-row{margin-bottom:18px}
+.edit-row label{display:block;margin-bottom:8px;color:#475569;font-weight:500}
+.btn-group{display:flex;gap:12px;margin-top:25px}
 @keyframes floatTip{
     0%,100%{transform:translateY(0)}
-    50%{transform:translateY(-8px)}
+    50%{transform:translateY(-10px)}
 }
 @keyframes flashLight{
-    0%{box-shadow:0 0 5px #ffd700}
-    50%{box-shadow:0 0 20px #ff9500,0 0 35px #ffd700}
-    100%{box-shadow:0 0 5px #ffd700}
+    0%{box-shadow:0 0 10px #ffd700}
+    50%{box-shadow:0 0 30px #ff9500,0 0 50px #ffd700}
+    100%{box-shadow:0 0 10px #ffd700}
 }
 @keyframes shakeFun{
     0%,100%{transform:rotate(0deg)}
-    25%{transform:rotate(3deg)}
-    75%{transform:rotate(-3deg)}
+    25%{transform:rotate(4deg)}
+    75%{transform:rotate(-4deg)}
+}
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(20px)}
+    to{opacity:1;transform:translateY(0)}
+}
+#main, #system-select, .login-box, .system-select-box{
+    animation:fadeIn 0.5s ease-out;
 }
 .egg-tip{
     position:fixed;right:30px;bottom:30px;
     background:linear-gradient(135deg,#ffd700,#ff9500);color:#333;
-    padding:10px 16px;border-radius:20px;
-    box-shadow:0 2px 8px #ccc;
-    animation:floatTip 2s infinite ease-in-out;
-    cursor:pointer;font-weight:bold;
+    padding:12px 20px;border-radius:25px;
+    box-shadow:0 6px 20px rgba(255,149,0,0.3);
+    animation:floatTip 2.5s infinite ease-in-out;
+    cursor:pointer;font-weight:600;
+    transition:all 0.3s ease;
+}
+.egg-tip:hover{
+    transform:scale(1.05);
+    box-shadow:0 10px 30px rgba(255,149,0,0.4);
 }
 .flash-effect{animation:flashLight 0.8s ease-in-out}
 .shake-effect{animation:shakeFun 0.5s ease-in-out}
+.syncing{
+    position:fixed;top:20px;right:20px;
+    background:rgba(16,185,129,0.95);color:white;
+    padding:10px 20px;border-radius:10px;
+    font-weight:600;z-index:9999;
+    animation:fadeIn 0.3s ease;
+}
 </style>
 </head>
-
 <body>
 <div id="login">
     <div class="login-box">
-        <div class="login-title">弘极七班积分系统</div>
+        <div class="login-title">弘极七班管理系统</div>
         <div class="login-desc">请使用班委账号登录</div>
+        <div class="sync-status" id="syncStatus">☁️ 正在连接云端...</div>
         <div class="input-item">
             <label>账号</label>
             <input id="user" placeholder="请输入账号">
@@ -156,14 +343,29 @@ tbody tr:hover{background:#eff6ff}
     </div>
 </div>
 
+<div id="system-select">
+    <div class="system-select-box">
+        <div class="system-title">请选择要进入的系统</div>
+        <div class="system-card" onclick="selectSystem('score')">
+            <h3>📊 积分系统</h3>
+            <p>包含学生积分管理、礼品兑换功能</p>
+        </div>
+        <div class="system-card" onclick="selectSystem('assess')">
+            <h3>📋 量化考核系统</h3>
+            <p>积分考核管理，记录操作人，无兑换功能</p>
+        </div>
+    </div>
+</div>
+
 <div id="main">
     <div class="container">
+        <button class="back-btn" onclick="backToSelect()">返回选择系统</button>
         <button class="logout-btn" onclick="logout()">退出登录</button>
         <div class="header-box">
             <h1 class="class-name">弘极七班</h1>
-            <p class="page-desc">班级积分兑换管理系统</p>
+            <p class="page-desc" id="system-desc">班级积分兑换管理系统</p>
+            <div class="cloud-badge" id="cloudBadge">☁️ 云端同步已开启</div>
         </div>
-
         <div class="operation-panel">
             <div class="section-title">一、添加班级学生</div>
             <div class="row-flex">
@@ -177,37 +379,38 @@ tbody tr:hover{background:#eff6ff}
                 <input class="mid-input" id="keyInfo" placeholder="输入学号/姓名">
                 <input class="short-input" id="addScore" placeholder="加分">
                 <input id="addNote" placeholder="加分原因">
+                <input class="operator-input" id="addOperator" placeholder="操作人">
                 <button class="btn btn-green" onclick="doAdd()">确认加分</button>
                 <input class="short-input" id="minusScore" placeholder="扣分">
                 <input id="minusNote" placeholder="扣分原因">
+                <input class="operator-input" id="minusOperator" placeholder="操作人">
                 <button class="btn btn-red" onclick="doMinus()">确认扣分</button>
             </div>
             <div class="section-title">三、全班统一加分</div>
             <div class="row-flex">
                 <input id="taskName" placeholder="集体任务名称">
                 <input class="short-input" id="taskPoint" placeholder="单次加分">
+                <input class="operator-input" id="taskOperator" placeholder="操作人">
                 <button class="btn btn-orange" onclick="doTask()">全班统一加分</button>
             </div>
-            <div class="section-title">四、礼品兑换扣分</div>
-            <div class="row-flex">
+            <div class="section-title" id="gift-section">四、礼品兑换扣分</div>
+            <div class="row-flex" id="gift-row">
                 <input class="mid-input" id="giftKey" placeholder="输入学号/姓名">
                 <input id="giftName" placeholder="兑换奖品名称">
                 <input class="short-input" id="giftPoint" placeholder="扣除积分">
                 <button class="btn btn-green" onclick="doGift()">确认兑换</button>
             </div>
         </div>
-
         <div class="tab-switch">
             <button class="btn btn-blue tab-active" id="tab1" onclick="switchTable(1)">积分总表</button>
             <button class="btn btn-gray" id="tab2" onclick="switchTable(2)">积分排名榜</button>
         </div>
-
         <div class="table-wrapper">
             <div id="tableAll">
                 <div class="section-title">📊 班级积分总表</div>
-                <table>
+                <table id="score-table">
                     <thead>
-                        <tr>
+                        <tr id="table-header">
                             <th>学号</th><th>姓名</th><th>当前总积分</th>
                             <th>加分明细</th><th>扣分明细</th><th>兑换记录</th><th>操作</th>
                         </tr>
@@ -227,15 +430,14 @@ tbody tr:hover{background:#eff6ff}
                 </table>
             </div>
         </div>
-
         <div class="bottom-btn-bar">
+            <button class="btn btn-gray" onclick="syncNow()">☁️ 立即同步云端</button>
             <button class="btn btn-gray" onclick="exportData()">导出数据文本</button>
             <button class="btn btn-red" onclick="clearAllData()">一键清空全部数据</button>
         </div>
         <div class="egg-tip" onclick="showNewEgg()">🎁隐藏趣味彩蛋</div>
     </div>
 </div>
-
 <!-- 编辑学生信息弹窗 -->
 <div class="edit-mask" id="editMask">
     <div class="edit-box">
@@ -256,10 +458,128 @@ tbody tr:hover{background:#eff6ff}
     </div>
 </div>
 
+<!-- LeanCloud云端同步SDK -->
+<script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.12.0/dist/av-min.js"></script>
 <script>
+// ==============================================
+// ☁️ 云端同步配置 - 请填写你的LeanCloud信息
+// ==============================================
+// 1. 打开 https://www.leancloud.cn/ 注册免费账号
+// 2. 创建应用 → 开发版（免费）
+// 3. 进入应用 → 设置 → 应用凭证 → 复制AppID和AppKey
+const LC_CONFIG = {
+    appId: "Uf6Wh0Xr6fmdQOa8DmOnS91O-gzGzoHsz",
+    appKey: "vS4XQ8uV7j9zA2bK5cN8eP7w",
+    serverURL: "https://uf6wh0xr.lc-cn-n1-shared.com"
+};
+
+// 初始化云端同步
+let cloudSyncEnabled = false;
+let isSyncing = false;
+
+function initCloudSync() {
+    if(LC_CONFIG.appId !== "你的AppID" && LC_CONFIG.appKey !== "你的AppKey") {
+        try {
+            AV.init({
+                appId: LC_CONFIG.appId,
+                appKey: LC_CONFIG.appKey,
+                serverURL: LC_CONFIG.serverURL
+            });
+            cloudSyncEnabled = true;
+            document.getElementById('syncStatus').className = 'sync-status sync-on';
+            document.getElementById('syncStatus').textContent = '☁️ 云端同步已连接';
+            document.getElementById('cloudBadge').textContent = '☁️ 云端同步已开启';
+            console.log('☁️ 云端同步初始化成功');
+        } catch(e) {
+            console.log('☁️ 云端同步初始化失败:', e);
+            showSyncOffline();
+        }
+    } else {
+        showSyncOffline();
+    }
+}
+
+function showSyncOffline() {
+    cloudSyncEnabled = false;
+    document.getElementById('syncStatus').className = 'sync-status sync-off';
+    document.getElementById('syncStatus').textContent = '💾 本地模式（未配置云端）';
+    document.getElementById('cloudBadge').textContent = '💾 本地存储模式';
+}
+
+// 显示同步中提示
+function showSyncing() {
+    const div = document.createElement('div');
+    div.className = 'syncing';
+    div.textContent = '☁️ 正在同步云端...';
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 2000);
+}
+
+// 保存到云端
+async function saveToCloud() {
+    if(!cloudSyncEnabled || isSyncing) return;
+    isSyncing = true;
+    showSyncing();
+    try {
+        const query = new AV.Query('Hongji7Data');
+        const results = await query.find();
+        let cloudData;
+        if(results.length > 0) {
+            cloudData = results[0];
+        } else {
+            const Hongji7Data = AV.Object.extend('Hongji7Data');
+            cloudData = new Hongji7Data();
+        }
+        cloudData.set('students', JSON.stringify(data));
+        cloudData.set('updateTime', new Date());
+        await cloudData.save();
+        console.log('☁️ 云端同步成功');
+    } catch(e) {
+        console.log('☁️ 云端同步失败:', e);
+    }
+    isSyncing = false;
+}
+
+// 从云端加载
+async function loadFromCloud() {
+    if(!cloudSyncEnabled) return;
+    try {
+        const query = new AV.Query('Hongji7Data');
+        query.descending('updateTime');
+        query.limit(1);
+        const results = await query.find();
+        if(results.length > 0) {
+            const cloudData = results[0];
+            const cloudStudents = cloudData.get('students');
+            if(cloudStudents) {
+                data = JSON.parse(cloudStudents);
+                localStorage.setItem('hongji7_data', JSON.stringify(data));
+                renderAll();
+                console.log('☁️ 云端数据加载成功');
+            }
+        }
+    } catch(e) {
+        console.log('☁️ 云端加载失败，使用本地数据:', e);
+    }
+}
+
+// 手动同步
+function syncNow() {
+    if(!cloudSyncEnabled) {
+        alert('💡 请先在代码中配置LeanCloud的AppID和AppKey\n\n注册地址：https://www.leancloud.cn/');
+        return;
+    }
+    saveToCloud();
+    alert('☁️ 已同步到云端！');
+}
+
+// ==============================================
+// 系统核心功能
+// ==============================================
 const ADMIN_USER = "弘极班委";
 const ADMIN_PWD = "123456";
 const CLEAR_PWD = "123456";
+let currentSystem = 'score';
 let data = JSON.parse(localStorage.getItem('hongji7_data')) || [];
 let addCount = 0;
 let nowTab = 1;
@@ -267,6 +587,7 @@ let nowTab = 1;
 const novelEgg = ["七班潜力少年超多✨","积分见证每日成长😎","班风向上人人闪光🌟","团结共进未来可期"];
 const kingEgg = ["🏆积分王者，实力出众","稳居榜首优秀已成习惯"];
 const funTalk = ["加分到手快乐翻倍🥳","集体发力共同进步","付出皆有回报"];
+
 function getRandomText(arr){return arr[Math.floor(Math.random()*arr.length)];}
 
 function showNewEgg(){
@@ -299,52 +620,105 @@ function login(){
     let p = document.getElementById('pwd').value.trim();
     if(u === ADMIN_USER && p === ADMIN_PWD){
         localStorage.setItem('isLogin','true');
-        showMain();
+        showSystemSelect();
     }else{
         alert(Math.random()>0.5?"账号密码不对哦~":"密钥验证失败");
     }
 }
+
+function showSystemSelect(){
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('system-select').style.display = 'block';
+    document.getElementById('main').style.display = 'none';
+}
+
+function selectSystem(system){
+    currentSystem = system;
+    document.getElementById('system-select').style.display = 'none';
+    showMain();
+}
+
+function backToSelect(){
+    showSystemSelect();
+}
+
 function logout(){
     localStorage.removeItem('isLogin');
     alert("👋本次管理结束");
     location.reload();
 }
+
 function showMain(){
-    document.getElementById('login').style.display = 'none';
     document.getElementById('main').style.display = 'block';
+    if(currentSystem === 'score'){
+        document.getElementById('system-desc').textContent = '班级积分兑换管理系统';
+        document.getElementById('gift-section').style.display = 'block';
+        document.getElementById('gift-row').style.display = 'flex';
+        document.getElementById('table-header').innerHTML = `
+            <th>学号</th><th>姓名</th><th>当前总积分</th>
+            <th>加分明细</th><th>扣分明细</th><th>兑换记录</th><th>操作</th>
+        `;
+    }else{
+        document.getElementById('system-desc').textContent = '班级量化考核管理系统';
+        document.getElementById('gift-section').style.display = 'none';
+        document.getElementById('gift-row').style.display = 'none';
+        document.getElementById('table-header').innerHTML = `
+            <th>学号</th><th>姓名</th><th>当前总积分</th>
+            <th>加分明细</th><th>扣分明细</th><th>操作</th>
+        `;
+    }
     renderAll();
-    alert("🚀成功登入积分管理系统");
+    alert(`🚀成功登入${currentSystem==='score'?'积分':'量化考核'}管理系统`);
 }
+
 window.onload = function(){
+    initCloudSync();
+    loadFromCloud();
     if(localStorage.getItem('isLogin')==='true'){
-        showMain();
+        showSystemSelect();
     }
 }
 
 function renderAll(){renderTable();renderRank();}
+
 function renderTable(){
     let tb = document.getElementById('listBody');
     let html = '';
+    let colCount = currentSystem === 'score' ? 7 : 6;
     if(data.length===0){
-        html='<tr><td colspan="7" class="empty-hint">暂无学生</td></tr>';
+        html=`<tr><td colspan="${colCount}" class="empty-hint">暂无学生</td></tr>`;
     }else{
         data.sort((a,b)=>a.num.localeCompare(b.num));
         data.forEach((item,i)=>{
-            html+=`<tr>
-            <td>${item.num}</td>
-            <td>${item.name}</td>
-            <td class="total-score">${item.score}</td>
-            <td class="record-content">${item.add||'无'}</td>
-            <td class="record-content">${item.min||'无'}</td>
-            <td class="record-content">${item.gift||'无'}</td>
-            <td>
-                <button class="btn btn-yellow" onclick="openEdit(${i})">编辑</button>
-                <button class="btn btn-red" onclick="delStudent(${i})">删除</button>
-            </td></tr>`;
+            if(currentSystem === 'score'){
+                html+=`<tr>
+                <td>${item.num}</td>
+                <td>${item.name}</td>
+                <td class="total-score">${item.score}</td>
+                <td class="record-content">${item.add||'无'}</td>
+                <td class="record-content">${item.min||'无'}</td>
+                <td class="record-content">${item.gift||'无'}</td>
+                <td>
+                    <button class="btn btn-yellow" onclick="openEdit(${i})">编辑</button>
+                    <button class="btn btn-red" onclick="delStudent(${i})">删除</button>
+                </td></tr>`;
+            }else{
+                html+=`<tr>
+                <td>${item.num}</td>
+                <td>${item.name}</td>
+                <td class="total-score">${item.score}</td>
+                <td class="record-content">${item.add||'无'}</td>
+                <td class="record-content">${item.min||'无'}</td>
+                <td>
+                    <button class="btn btn-yellow" onclick="openEdit(${i})">编辑</button>
+                    <button class="btn btn-red" onclick="delStudent(${i})">删除</button>
+                </td></tr>`;
+            }
         });
     }
     tb.innerHTML=html;
 }
+
 function renderRank(){
     let tb = document.getElementById('rankBody');
     let html='';
@@ -359,7 +733,6 @@ function renderRank(){
     tb.innerHTML=html;
 }
 
-// 打开编辑弹窗
 function openEdit(idx){
     let stu = data[idx];
     document.getElementById('editIndex').value = idx;
@@ -367,11 +740,11 @@ function openEdit(idx){
     document.getElementById('editName').value = stu.name;
     document.getElementById('editMask').style.display = 'flex';
 }
-// 关闭编辑弹窗
+
 function closeEdit(){
     document.getElementById('editMask').style.display = 'none';
 }
-// 保存修改信息
+
 function saveEdit(){
     let idx = parseInt(document.getElementById('editIndex').value);
     let newNum = document.getElementById('editNum').value.trim();
@@ -380,7 +753,6 @@ function saveEdit(){
         alert("学号和姓名不能为空");
         return;
     }
-    // 校验学号重复，排除自身
     let repeat = data.some((item,i)=> item.num === newNum && i !== idx);
     if(repeat){
         alert("该学号已存在，无法修改");
@@ -394,7 +766,12 @@ function saveEdit(){
 }
 
 function findStudent(key){return data.find(s=>s.num===key||s.name===key);}
-function save(){localStorage.setItem('hongji7_data',JSON.stringify(data));renderAll();}
+
+function save(){
+    localStorage.setItem('hongji7_data', JSON.stringify(data));
+    renderAll();
+    saveToCloud(); // 自动同步到云端
+}
 
 function addBatch(){
     let t=document.getElementById('batch').value.trim();
@@ -414,6 +791,7 @@ function addBatch(){
     save();
     alert(`🎉成功添加${cnt}名同学`);
 }
+
 function addSingle(){
     let t=document.getElementById('stu').value.trim();
     if(!t)return alert("格式：学号 姓名");
@@ -431,7 +809,9 @@ function doAdd(){
     let key=document.getElementById('keyInfo').value.trim();
     let s=parseInt(document.getElementById('addScore').value);
     let note=document.getElementById('addNote').value.trim();
+    let operator=document.getElementById('addOperator').value.trim();
     if(!key||isNaN(s)||s<=0||!note)return alert("请补全信息");
+    if(currentSystem==='assess' && !operator)return alert("量化考核系统请填写操作人");
     let stu=findStudent(key);
     if(!stu)return alert("未找到该学生");
     
@@ -443,11 +823,13 @@ function doAdd(){
         addCount=0;
     }
     let time=new Date().toLocaleString().slice(5);
-    stu.add+=(stu.add?'\n':'')+`[${time}]+${s}分 ${note}`;
+    let operatorStr = operator ? ` 操作人:${operator}` : '';
+    stu.add+=(stu.add?'\n':'')+`[${time}]+${s}分 ${note}${operatorStr}`;
     
     document.getElementById('keyInfo').value='';
     document.getElementById('addScore').value='';
     document.getElementById('addNote').value='';
+    document.getElementById('addOperator').value='';
     save();
     alert(getRandomText(funTalk));
     
@@ -455,41 +837,53 @@ function doAdd(){
         setTimeout(()=>alert(getRandomText(kingEgg)),300);
     }
 }
+
 function doMinus(){
     let key=document.getElementById('keyInfo').value.trim();
     let s=parseInt(document.getElementById('minusScore').value);
     let note=document.getElementById('minusNote').value.trim();
+    let operator=document.getElementById('minusOperator').value.trim();
     if(!key||isNaN(s)||s<=0||!note)return alert("补全扣分信息");
+    if(currentSystem==='assess' && !operator)return alert("量化考核系统请填写操作人");
     let stu=findStudent(key);
     if(!stu)return alert("未找到学生");
     
     stu.score=Math.max(0,stu.score-s);
     let time=new Date().toLocaleString().slice(5);
-    stu.min+=(stu.min?'\n':'')+`[${time}]-${s}分 ${note}`;
+    let operatorStr = operator ? ` 操作人:${operator}` : '';
+    stu.min+=(stu.min?'\n':'')+`[${time}]-${s}分 ${note}${operatorStr}`;
     
     document.getElementById('keyInfo').value='';
     document.getElementById('minusScore').value='';
     document.getElementById('minusNote').value='';
+    document.getElementById('minusOperator').value='';
     save();
     alert(getRandomText(funTalk));
 }
+
 function doTask(){
     let task=document.getElementById('taskName').value.trim();
     let s=parseInt(document.getElementById('taskPoint').value);
+    let operator=document.getElementById('taskOperator').value.trim();
     if(!task||isNaN(s)||s<=0)return alert("填写任务与分值");
+    if(currentSystem==='assess' && !operator)return alert("量化考核系统请填写操作人");
     let time=new Date().toLocaleString().slice(5);
+    let operatorStr = operator ? ` 操作人:${operator}` : '';
     
     data.forEach(stu=>{
         stu.score+=s;
-        stu.add+=(stu.add?'\n':'')+`[${time}]+${s}分 ${task}`;
+        stu.add+=(stu.add?'\n':'')+`[${time}]+${s}分 ${task}${operatorStr}`;
     });
     
     document.getElementById('taskName').value='';
     document.getElementById('taskPoint').value='';
+    document.getElementById('taskOperator').value='';
     save();
     alert("🤝全员加分完成");
 }
+
 function doGift(){
+    if(currentSystem!=='score')return;
     let key=document.getElementById('giftKey').value.trim();
     let s=parseInt(document.getElementById('giftPoint').value);
     let gift=document.getElementById('giftName').value.trim();
@@ -508,28 +902,32 @@ function doGift(){
     save();
     alert(getRandomText(funTalk));
 }
+
 function delStudent(i){
     if(!confirm("确定删除该学生记录？"))return;
     data.splice(i,1);
     save();
     alert("已删除记录");
 }
+
 function exportData(){
     if(data.length===0)return alert("暂无数据导出");
-    let txt="弘极七班积分记录表\n学号\t姓名\t积分\t加分记录\t扣分记录\t兑换记录\n";
+    let systemName = currentSystem==='score'?'积分':'量化考核';
+    let txt=`弘极七班${systemName}记录表\n学号\t姓名\t积分\t加分记录\t扣分记录${currentSystem==='score'?'\t兑换记录':''}\n`;
     data.forEach(item=>{
         let addStr = (item.add||'无').replace(/\n/g,' ');
         let minStr = (item.min||'无').replace(/\n/g,' ');
-        let giftStr = (item.gift||'无').replace(/\n/g,' ');
-        txt+=`${item.num}\t${item.name}\t${item.score}\t${addStr}\t${minStr}\t${giftStr}\n`;
+        let giftStr = currentSystem==='score' ? `\t${(item.gift||'无').replace(/\n/g,' ')}` : '';
+        txt+=`${item.num}\t${item.name}\t${item.score}\t${addStr}\t${minStr}${giftStr}\n`;
     });
     let blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
     let a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
-    a.download="弘极七班积分记录.txt";
+    a.download=`弘极七班${systemName}记录.txt`;
     a.click();
     alert("💾数据下载成功");
 }
+
 function clearAllData(){
     let input=prompt("输入清空密码：");
     if(input!==CLEAR_PWD)return alert("密码错误");
